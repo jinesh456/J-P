@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>J&P Gourmet Pizza & Burger Bar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff6f0;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #ff4d00;
+      color: white;
+      padding: 25px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      margin: 0;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin: 20px;
+    }
+    .search-container {
+      position: relative;
+    }
+    .search-container input {
+      padding: 12px 40px 12px 16px;
+      width: 320px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .search-container span {
+      position: absolute;
+      right: 12px;
+      top: 10px;
+      font-size: 20px;
+      color: #999;
+    }
+    #cart-button {
+      background: #ffbb00;
+      color: #fff;
+      border: none;
+      font-size: 22px;
+      padding: 10px 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+    .item {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 260px;
+      text-align: center;
+      padding: 15px;
+    }
+    .item img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .item h3 {
+      margin: 10px 0;
+      font-size: 20px;
+    }
+    .item p {
+      font-weight: bold;
+      color: #e63946;
+      font-size: 18px;
+    }
+    .item button {
+      padding: 10px 18px;
+      background: #ff4d00;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+    .item button:hover {
+      background: #e03800;
+    }
+
+    /* Order Summary Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: #fff6f0;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .modal-content p {
+      margin: 6px 0;
+    }
+    .modal-buttons {
+      margin-top: 20px;
+    }
+    .modal-buttons button {
+      padding: 12px 20px;
+      margin-right: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+    .modal-buttons .order {
+      background: green;
+    }
+    .modal-buttons .cancel {
+      background: red;
+    }
+
+    .cancel-msg {
+      display: none;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .cancel-msg h2 {
+      color: red;
+    }
+    .cancel-msg a {
+      margin-top: 20px;
+      display: inline-block;
+      background: #ff4d00;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>J&P Gourmet Pizza & Burger Bar 🍕🍔</h1>
+  </header>
+
+  <div class="top-bar">
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search delicious pizza or burger..." onkeyup="searchItems()">
+      <span>🔍</span>
+    </div>
+    <button id="cart-button" onclick="showOrderSummary()">🛒</button>
+  </div>
+
+  <div class="menu" id="menu">
+    <div class="item" data-name="Margherita Pizza">
+      <img src="Pizza.png" alt="Margherita Pizza"/>
+      <h3>Margherita Pizza</h3>
+      <p>₹250</p>
+      <button onclick="addToCart('Margherita Pizza', 250)">Add to Cart</button>
+    </div>
+    <div class="item" data-name="Cheese Burger">
+      <img src="Burger.png" alt="Cheese Burger"/>
+      <h3>Cheese Burger</h3>
+      <p>₹180</p>
+      <button onclick="addToCart('Cheese Burger', 180)">Add to Cart</button>
+    </div>
+
+    <!-- Added New Items -->
+    <div class="item" data-name="Pepperoni Pizza">
+      <img src="J.png" alt="Pepperoni Pizza">
+      <h3>Pepperoni Pizza</h3>
+      <p>₹300</p>
+      <button onclick="addToCart('Pepperoni Pizza', 300)">Add to Cart</button>
+    </div>
+    <div class="item" data-name="Veggie Burger">
+      <img src="P.png" alt="Veggie Burger">
+      <h3>Veggie Burger</h3>
+      <p>₹160</p>
+      <button onclick="addToCart('Veggie Burger', 160)">Add to Cart</button>
+    </div>
+    <div class="item" data-name="Grilled Sandwich">
+      <img src="S.png" alt="Grilled Sandwich">
+      <h3>Grilled Sandwich</h3>
+      <p>₹120</p>
+      <button onclick="addToCart('Grilled Sandwich', 120)">Add to Cart</button>
+    </div>
+    <div class="item" data-name="French Fries">
+      <img src="F.png" alt="French Fries">
+      <h3>French Fries</h3>
+      <p>₹90</p>
+      <button onclick="addToCart('French Fries', 90)">Add to Cart</button>
+    </div>
+    <div class="item" data-name="Creamy Pasta">
+      <img src="Z.png" alt="Creamy Pasta">
+      <h3>Creamy Pasta</h3>
+      <p>₹200</p>
+      <button onclick="addToCart('Creamy Pasta', 200)">Add to Cart</button>
+    </div>
+    <div class="item" data-name="Crispy Nuggets">
+      <img src="N.png" alt="Crispy Nuggets">
+      <h3>Crispy Nuggets</h3>
+      <p>₹150</p>
+      <button onclick="addToCart('Crispy Nuggets', 150)">Add to Cart</button>
+    </div>
+    <div class="item" data-name="Cold Coffee">
+      <img src="C.png" alt="Cold Coffee">
+      <h3>Cold Coffee</h3>
+      <p>₹110</p>
+      <button onclick="addToCart('Cold Coffee', 110)">Add to Cart</button>
+    </div>
+  </div>
+
+  <!-- Order Summary Modal -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content">
+      <h2>Your Order Summary 🛍️</h2>
+      <div id="cart-items"></div>
+      <p id="total" style="font-weight:bold; font-size:20px; color:green;"></p>
+      <div class="modal-buttons">
+        <button class="order" onclick="placeOrder()">📦 Order Now</button>
+        <button class="cancel" onclick="cancelOrder()">❌ Cancel Order</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Message -->
+  <div class="cancel-msg" id="cancelMsg">
+    <h2>❌ Your order has been cancelled!</h2>
+    <p>Hope to serve you again soon 😊</p>
+    <a href="#" onclick="hideCancelMsg()">Back to Home</a>
+  </div>
+
+  <script>
+    const CART_KEY = 'jp_cart';
+
+    function loadCart() {
+      const cartData = localStorage.getItem(CART_KEY);
+      return cartData ? JSON.parse(cartData) : [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
+
+    let cart = loadCart();
+
+    function addToCart(productName, price) {
+      const item = cart.find(p => p.name === productName);
+      if (item) {
+        item.quantity++;
+      } else {
+        cart.push({ name: productName, price, quantity: 1 });
+      }
+      saveCart(cart);
+      alert(`${productName} added to cart!`);
+    }
+
+    function searchItems() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const items = document.querySelectorAll('.item');
+      items.forEach(item => {
+        const name = item.getAttribute('data-name').toLowerCase();
+        item.style.display = name.includes(search) ? 'block' : 'none';
+      });
+    }
+
+    function showOrderSummary() {
+      document.getElementById("orderModal").style.display = "flex";
+      const cart = loadCart();
+      const cartItemsDiv = document.getElementById('cart-items');
+      const totalDiv = document.getElementById('total');
+      cartItemsDiv.innerHTML = "";
+      let total = 0;
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = "<p>Your cart is empty.</p>";
+        totalDiv.textContent = "";
+      } else {
+        cart.forEach(item => {
+          const line = document.createElement('p');
+          const itemTotal = item.quantity * item.price;
+          total += itemTotal;
+          line.textContent = `${item.name} × ${item.quantity} = ₹${itemTotal}`;
+          cartItemsDiv.appendChild(line);
+        });
+        totalDiv.textContent = `Total: ₹${total}`;
+      }
+    }
+
+    window.onclick = function(event) {
+      const modal = document.getElementById("orderModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    function placeOrder() {
+      const cart = loadCart();
+      const total = document.getElementById("total").textContent.split("₹")[1] || 0;
+      navigator.geolocation.getCurrentPosition(function(position) {
+        const locationLink = `https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`;
+        const orderList = cart.map(i => `${i.name} x${i.quantity}`).join('%0A');
+        const message = `Hello, I want to order:%0A${orderList}%0ATotal: ₹${total}%0ALocation: ${locationLink}`;
+        window.open(`https://wa.me/919558364937?text=${message}`, '_blank');
+      }, function() {
+        alert("Please enable location services to place order.");
+      });
+    }
+
+    function cancelOrder() {
+      localStorage.removeItem('jp_cart');
+      document.getElementById("orderModal").style.display = "none";
+      document.getElementById("cancelMsg").style.display = "block";
+    }
+
+    function hideCancelMsg() {
+      document.getElementById("cancelMsg").style.display = "none";
+    }
+  </script>
+</body>
+</html>
